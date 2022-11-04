@@ -1,10 +1,10 @@
 const { readFile } = require('fs/promises');
 const path = require('path');
-// const token = require('@supercharge/strings');
+const token = require('@supercharge/strings');
 
 const pathName = '../talker.json';
 const talkersPath = path.resolve(__dirname, pathName);
-// const randomToken = token.random(16); 
+const getRandomToken = () => token.random(16); 
 
 const getTalkers = async () => {
     const response = await readFile(talkersPath, 'utf8');
@@ -25,4 +25,5 @@ const getTalkerById = async (id) => {
 module.exports = {
     getTalkers,
     getTalkerById,
+    getRandomToken,
 };
