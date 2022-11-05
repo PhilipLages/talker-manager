@@ -67,8 +67,8 @@ const updateTalker = async (id, ...rest) => {
 const deleteTalker = async (id) => {
     const talkers = await getTalkers();
 
-    const arrayPosition = talkers.findIndex((team) => team.id === Number(id));
-    talkers.splice(arrayPosition, 1);
+    const indexToDelete = talkers.findIndex((team) => team.id === Number(id));
+    talkers.splice(indexToDelete, 1);
   
     await writeFile(talkersPath, JSON.stringify(talkers, null, 2));
 };
