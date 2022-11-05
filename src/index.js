@@ -6,7 +6,7 @@ const {
   getRandomToken, 
   createNewTalker, 
 } = require('./utils/talkerHandlers');
-const { validateEmail, validatePassword, validateToken, validateName } = require('./middlewares');
+const { validateEmail, validatePassword, validateToken, validateName, validateAge } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -46,7 +46,7 @@ app.post('/login', validateEmail, validatePassword, async (req, res) => {
   res.status(200).json({ token });
 });
 
-app.post('/talker', validateToken, validateName, async (req, res) => {
+app.post('/talker', validateToken, validateName, validateAge, async (req, res) => {
   const { name, age, talk: { rate, watchedAt } } = req.body;
 
   const newTalker = await createNewTalker(name, age, rate, watchedAt);
