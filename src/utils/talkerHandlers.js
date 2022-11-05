@@ -43,9 +43,31 @@ const createNewTalker = async (name, age, rate, watchedAt) => {
     return newTalker;
 };
 
+const updateTalker = async (id, ...rest) => {
+    const talkers = await getTalkers();
+    const updatedTalkers = talkers.map((talker) => {
+        if (talker.id === id) {
+            return {
+                ...talker,
+                name: rest[0],
+                age: rest[1],
+                talk: {
+                    watchedAt: rest[2],
+                    rate: rest[3],
+                },
+            };
+        }
+        return talker;
+    });
+    await writeFile(talkersPath, JSON.stringify(updatedTalkers, null, 2));
+    
+    return updatedTalkers.find((talker) => talker.id === id);
+};
+
 module.exports = {
     getTalkers,
     getTalkerById,
     getRandomToken,
     createNewTalker,
+    updateTalker,
 };

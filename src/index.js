@@ -4,7 +4,8 @@ const {
   getTalkers, 
   getTalkerById, 
   getRandomToken, 
-  createNewTalker, 
+  createNewTalker,
+  updateTalker, 
 } = require('./utils/talkerHandlers');
 const { 
   validateEmail, 
@@ -61,4 +62,14 @@ app.post('/talker', validateToken, validateName,
   const newTalker = await createNewTalker(name, age, rate, watchedAt);
 
   res.status(201).send(newTalker);
+});
+
+app.put('/talker/:id', validateToken, validateName, 
+validateAge, validateTalk, validateRate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { rate, watchedAt } } = req.body;
+  
+  const talkerToUpdate = await updateTalker(Number(id), ...[name, age, watchedAt, rate]);
+
+  res.status(200).send(talkerToUpdate);
 });
