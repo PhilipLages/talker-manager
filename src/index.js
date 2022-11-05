@@ -5,7 +5,8 @@ const {
   getTalkerById, 
   getRandomToken, 
   createNewTalker,
-  updateTalker, 
+  updateTalker,
+  deleteTalker, 
 } = require('./utils/talkerHandlers');
 const { 
   validateEmail, 
@@ -72,4 +73,12 @@ validateAge, validateTalk, validateRate, async (req, res) => {
   const talkerToUpdate = await updateTalker(Number(id), ...[name, age, watchedAt, rate]);
 
   res.status(200).send(talkerToUpdate);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+
+  await deleteTalker(id);
+
+  res.status(204).end();
 });

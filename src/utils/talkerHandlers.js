@@ -64,10 +64,20 @@ const updateTalker = async (id, ...rest) => {
     return updatedTalkers.find((talker) => talker.id === id);
 };
 
+const deleteTalker = async (id) => {
+    const talkers = await getTalkers();
+
+    const arrayPosition = talkers.findIndex((team) => team.id === Number(id));
+    talkers.splice(arrayPosition, 1);
+  
+    await writeFile(talkersPath, JSON.stringify(talkers, null, 2));
+};
+
 module.exports = {
     getTalkers,
     getTalkerById,
     getRandomToken,
     createNewTalker,
     updateTalker,
+    deleteTalker,
 };
