@@ -6,7 +6,8 @@ const {
   getRandomToken, 
   createNewTalker,
   updateTalker,
-  deleteTalker, 
+  deleteTalker,
+  searchTalkers, 
 } = require('./utils/talkerHandlers');
 const { 
   validateEmail, 
@@ -33,6 +34,14 @@ app.listen(PORT, () => {
   console.log(`Server running on port:${PORT}`);
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  const term = req.query.q;
+
+  const talkersBySearch = await searchTalkers(term);
+
+  res.status(200).send(talkersBySearch);
+});
+
 app.get('/talker', async (_req, res) => {
   const talkers = await getTalkers();
   if (!talkers.length) return res.status(200).send([]);
@@ -40,17 +49,7 @@ app.get('/talker', async (_req, res) => {
   res.status(200).send(talkers);
 });
 
-app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-
-  const talker = await getTalkerById(Number(id));
-
-  if (!talker) return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
-  
-  res.status(200).send(talker);
-});
-
-app.post('/login', validateEmail, validatePassword, async (req, res) => {
+app.post('/login', validateEmail, validatePassword, async (_req, res) => {
   const token = getRandomToken();
 
   res.status(200).json({ token });
@@ -65,12 +64,22 @@ app.post('/talker', validateToken, validateName,
   res.status(201).send(newTalker);
 });
 
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+
+  const talker = await getTalkerById(Number(id));
+
+  if (!talker) return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+  
+  res.status(200).send(talker);
+});
+
 app.put('/talker/:id', validateToken, validateName, 
 validateAge, validateTalk, validateRate, async (req, res) => {
   const { id } = req.params;
-  const { name, age, talk: { rate, watchedAt } } = req.body;
+  const talkerObj = req.body;
   
-  const talkerToUpdate = await updateTalker(Number(id), ...[name, age, watchedAt, rate]);
+  const talkerToUpdate = await updateTalker(Number(id), talkerObj);
 
   res.status(200).send(talkerToUpdate);
 });
@@ -82,3 +91,5 @@ app.delete('/talker/:id', validateToken, async (req, res) => {
 
   res.status(204).end();
 });
+
+console.log(typeof '2');

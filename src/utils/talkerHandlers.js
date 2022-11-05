@@ -14,6 +14,14 @@ const getTalkers = async () => {
     return talkers;
 };
 
+const searchTalkers = async (searchTerm) => {
+    const talkers = await getTalkers();
+
+    const talkersBySearch = talkers.filter(({ name }) => name.includes(searchTerm));
+
+    return talkersBySearch;
+};
+
 const getTalkerById = async (id) => {
     const talkers = await getTalkers();
 
@@ -43,18 +51,13 @@ const createNewTalker = async (name, age, rate, watchedAt) => {
     return newTalker;
 };
 
-const updateTalker = async (id, ...rest) => {
+const updateTalker = async (id, body) => {
     const talkers = await getTalkers();
     const updatedTalkers = talkers.map((talker) => {
         if (talker.id === id) {
             return {
                 ...talker,
-                name: rest[0],
-                age: rest[1],
-                talk: {
-                    watchedAt: rest[2],
-                    rate: rest[3],
-                },
+               ...body,
             };
         }
         return talker;
@@ -80,4 +83,5 @@ module.exports = {
     createNewTalker,
     updateTalker,
     deleteTalker,
+    searchTalkers,
 };
