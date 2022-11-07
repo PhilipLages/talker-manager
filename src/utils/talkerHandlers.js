@@ -70,10 +70,9 @@ const updateTalker = async (id, body) => {
 const deleteTalker = async (id) => {
     const talkers = await getTalkers();
 
-    const indexToDelete = talkers.findIndex((team) => team.id === Number(id));
-    talkers.splice(indexToDelete, 1);
+    const filteredTalkers = talkers.filter((talker) => talker.id !== Number(id));
   
-    await writeFile(talkersPath, JSON.stringify(talkers, null, 2));
+    await writeFile(talkersPath, JSON.stringify(filteredTalkers, null, 2));
 };
 
 module.exports = {
